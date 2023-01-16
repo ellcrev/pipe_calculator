@@ -23,7 +23,9 @@ const screenshot = async (container: HTMLDivElement) => {
   container.appendChild(childNode);
   const result = await html2canvas(container);
   container.removeChild(childNode);
-  return result.toDataURL();
+  const outputStr = result.toDataURL();
+  const blob = await (await fetch(outputStr)).blob();
+  return blob;
 };
 
 export default screenshot;

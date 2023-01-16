@@ -105,7 +105,7 @@ const Home: NextPage = () => {
                 );
                 return res;
               }
-              return "";
+              return null;
             }}
           />
         </Collapse>
