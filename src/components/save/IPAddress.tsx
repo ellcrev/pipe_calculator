@@ -120,7 +120,7 @@ const IPAddress = () => {
         {/* Number 1 Input */}
         <TextField
           value={num1}
-          inputMode={"numeric"}
+          type="tel"
           onKeyDown={(ev) => {
             if (ev.key === "Backspace" && num1Ref.current) {
               keydownHandler(num1Ref.current, num1, (newStr) => {
@@ -163,7 +163,7 @@ const IPAddress = () => {
         <Typography sx={{ fontSize: "32px", mx: 1 }}>.</Typography>
         {/* Number 2 Input */}
         <TextField
-          inputMode={"numeric"}
+          type="tel"
           inputRef={num2Ref}
           variant="outlined"
           value={num2}
@@ -214,7 +214,7 @@ const IPAddress = () => {
         <TextField
           inputRef={num3Ref}
           variant="outlined"
-          inputMode={"numeric"}
+          type="tel"
           value={num3}
           onKeyDown={(ev) => {
             if (ev.key === "Backspace" && num3Ref.current && num2Ref.current) {
@@ -263,7 +263,7 @@ const IPAddress = () => {
         <TextField
           inputRef={num4Ref}
           value={num4}
-          inputMode={"numeric"}
+          type="tel"
           onKeyDown={(ev) => {
             if (ev.key === "Backspace" && num4Ref.current && num3Ref.current) {
               keydownHandler(
