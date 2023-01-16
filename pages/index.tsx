@@ -4,20 +4,71 @@ import { useRef, useState } from "react";
 import { calculate } from "../src/calculate";
 import Inputs from "../src/components/inputs/Index";
 import Output from "../src/components/outputs/Index";
-import SaveSettings from "../src/components/save-settings/Index";
-import SaveButton from "../src/components/save-settings/DownloadButton";
-import { CalculationOutputs } from "../src/types";
+import Info from "../src/components/info/Index";
+import Export from "../src/components/export/Index";
+import {
+  CalculationOutputs,
+  LengthUnit,
+  PipeScheduleName,
+  TemperatureUnit,
+} from "../src/types";
 import getCurrentTime from "../src/converters/timeFormat";
-import download from "../src/download";
+import getScreenshot from "../src/getScreenshot";
 
 const Home: NextPage = () => {
-  const [loading, setLoading] = useState(false);
-  const [output, setOutput] = useState<CalculationOutputs | null>(null);
+  // Process State Variables
+  const [calculating, setCalculating] = useState(false);
   const [screenshotting, setScreenshotting] = useState(false);
+  const [loadingEmail, setLoadingEmail] = useState(false);
+  const [emailMessage, setEmailMessage] = useState("");
+
+  // Input data
+
+  const defaultCircumferenceUnits: LengthUnit = "in";
+  const defaultThicknessUnits: LengthUnit = "in";
+  const defaultTemperatureUnits: TemperatureUnit = "F";
+
+  const [circumference, setCircumference] = useState("");
+  const [circumferenceUnits, setCircumferenceUnits] = useState<LengthUnit>(
+    defaultCircumferenceUnits,
+  );
+  const [thickness, setThickness] = useState("");
+  const [thicknessUnits, setThicknessUnits] = useState<LengthUnit>(
+    defaultThicknessUnits,
+  );
+  const [temperature, setTemperature] = useState("");
+  const [temperatureUnits, setTemperatureUnits] = useState<TemperatureUnit>(
+    defaultTemperatureUnits,
+  );
+  const [pipeSchedule, setPipeSchedule] =
+    useState<PipeScheduleName>("stainless-steel");
+
+  // Output data
+  const [output, setOutput] = useState<CalculationOutputs | null>(null);
+
+  // Info data
+  const [meterLetter, setMeterLetter] = useState<"H" | "C" | "S">("H");
+  const [meterNum1, setMeterNum1] = useState("");
+  const [meterNum2, setMeterNum2] = useState("");
+  const [meterNum3, setMeterNum3] = useState("");
+  const [meterNum4, setMeterNum4] = useState("");
+  const [ip1, setIp1] = useState("");
+  const [ip2, setIp2] = useState("");
+  const [ip3, setIp3] = useState("");
+  const [ip4, setIp4] = useState("");
+  const [location, setLocation] = useState<{
+    lat: string;
+    long: string;
+  } | null>(null);
+  const [additionalInfo, setAdditionalInfo] = useState<string>("");
+  // Export data
+  const [email, setEmail] = useState<string>("");
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const order = screenshotting
-    ? ["save", "inputs", "output"]
-    : ["inputs", "output", "save"];
+    ? ["info", "inputs", "output"]
+    : ["inputs", "output", "info", "export"];
+
   return (
     <Box
       sx={{
@@ -59,7 +110,7 @@ const Home: NextPage = () => {
             },
           }}
         >
-          {screenshotting ? "Meter Report" : "Flexim Pipe Calculator"}
+          {screenshotting ? "Meter Report" : "Flexim Meter Logger"}
         </Typography>
         {screenshotting ? (
           <Typography
@@ -75,6 +126,7 @@ const Home: NextPage = () => {
         ) : null}
         <Box>
           {order.map((orderItem) => {
+            // INPUT SECTION
             if (orderItem === "inputs") {
               return (
                 <Inputs
@@ -84,23 +136,41 @@ const Home: NextPage = () => {
                       setOutput(null);
                     }
                   }}
-                  loading={loading}
+                  loading={calculating}
                   onSubmit={
                     !output
                       ? async (inputData) => {
                           setOutput(null);
-                          setLoading(true);
+                          setCalculating(true);
                           const outputData = calculate(inputData);
                           setTimeout(() => {
-                            setLoading(false);
+                            setCalculating(false);
                             setOutput(outputData);
                           }, 1000);
                           return true;
                         }
                       : undefined
                   }
+                  circumference={circumference}
+                  setCircumference={setCircumference}
+                  circumferenceUnits={circumferenceUnits}
+                  setCircumferenceUnits={setCircumferenceUnits}
+                  defaultCircumferenceUnits={defaultCircumferenceUnits}
+                  thickness={thickness}
+                  setThickness={setThickness}
+                  thicknessUnits={thicknessUnits}
+                  setThicknessUnits={setThicknessUnits}
+                  defaultThicknessUnits={defaultThicknessUnits}
+                  temperature={temperature}
+                  setTemperature={setTemperature}
+                  temperatureUnits={temperatureUnits}
+                  setTemperatureUnits={setTemperatureUnits}
+                  defaultTemperatureUnits={defaultTemperatureUnits}
+                  pipeSchedule={pipeSchedule}
+                  setPipeSchedule={setPipeSchedule}
                 />
               );
+              // OUTPUT SECTION
             } else if (orderItem === "output") {
               return (
                 <Collapse in={output !== null} key={orderItem}>
@@ -116,26 +186,83 @@ const Home: NextPage = () => {
                   </Box>
                 </Collapse>
               );
-            } else {
+            } else if (orderItem === "info") {
               return (
                 <Collapse in={output !== null} key={orderItem}>
-                  <SaveSettings isScreenshotting={screenshotting} />
-                  <SaveButton
-                    saveCallback={async () => {
-                      if (containerRef.current) {
-                        const p1 = download(containerRef.current, () => {
-                          setScreenshotting((st) => !st);
-                        });
-                        const p2 = new Promise((res) => {
-                          setTimeout(() => {
-                            res(true);
-                          }, 500);
-                        });
-                        const results = await Promise.all([p1, p2]);
-                        return results[0];
-                      }
-                      return null;
+                  <Info
+                    isScreenshotting={screenshotting}
+                    meter={{
+                      letter: meterLetter,
+                      setLetter: setMeterLetter,
+                      num1: meterNum1,
+                      setNum1: setMeterNum1,
+                      num2: meterNum2,
+                      setNum2: setMeterNum2,
+                      num3: meterNum3,
+                      setNum3: setMeterNum3,
+                      num4: meterNum4,
+                      setNum4: setMeterNum4,
                     }}
+                    ip={{
+                      num1: ip1,
+                      setNum1: setIp1,
+                      num2: ip2,
+                      setNum2: setIp2,
+                      num3: ip3,
+                      setNum3: setIp3,
+                      num4: ip4,
+                      setNum4: setIp4,
+                    }}
+                    location={location}
+                    setLocation={setLocation}
+                    additionalInfo={additionalInfo}
+                    setAdditionalInfo={setAdditionalInfo}
+                  />
+                </Collapse>
+              );
+            } else {
+              // EXPORT
+              return (
+                <Collapse in={output !== null} key={orderItem}>
+                  <Export
+                    screenshotContainer={containerRef.current}
+                    screenshotting={screenshotting}
+                    toggleScreenshotting={() => {
+                      setScreenshotting((st) => !st);
+                    }}
+                    email={email}
+                    setEmail={setEmail}
+                    callEmail={async () => {
+                      if (containerRef.current) {
+                        setLoadingEmail(true);
+                        const b = await getScreenshot(
+                          containerRef.current,
+                          () => {
+                            setScreenshotting((st) => !st);
+                          },
+                        );
+                        const res = await (
+                          await fetch("/api/email", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ message: "Whats good?" }),
+                          })
+                        ).json();
+                        if (res.operation === "Success") {
+                          setEmailMessage("Email was successfully sent.");
+                        } else if (res.operation === "Failure") {
+                          setEmailMessage("Error sending email.");
+                        }
+                        setTimeout(() => {
+                          setEmailMessage("");
+                        }, 3000);
+                        setLoadingEmail(false);
+                      }
+                    }}
+                    loading={loadingEmail}
+                    errorSendingEmail={emailMessage}
                   />
                 </Collapse>
               );

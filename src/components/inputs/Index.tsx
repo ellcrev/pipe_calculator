@@ -1,10 +1,9 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import {
   CalculationInputs,
   LengthUnit,
   PipeScheduleName,
-  SpeedUnit,
   TemperatureUnit,
 } from "../../types";
 import validateCircumference from "../../validators/validateCircumference";
@@ -23,27 +22,45 @@ interface InputProps {
   loading: boolean;
   onSubmit?: (data: CalculationInputs) => Promise<true>;
   clearOutput: () => void;
+  circumference: string;
+  setCircumference: Dispatch<SetStateAction<string>>;
+  circumferenceUnits: LengthUnit;
+  setCircumferenceUnits: Dispatch<SetStateAction<LengthUnit>>;
+  defaultCircumferenceUnits: LengthUnit;
+  thickness: string;
+  setThickness: Dispatch<SetStateAction<string>>;
+  thicknessUnits: LengthUnit;
+  setThicknessUnits: Dispatch<SetStateAction<LengthUnit>>;
+  defaultThicknessUnits: LengthUnit;
+  temperature: string;
+  setTemperature: Dispatch<SetStateAction<string>>;
+  temperatureUnits: TemperatureUnit;
+  setTemperatureUnits: Dispatch<SetStateAction<TemperatureUnit>>;
+  defaultTemperatureUnits: TemperatureUnit;
+  pipeSchedule: PipeScheduleName;
+  setPipeSchedule: Dispatch<SetStateAction<PipeScheduleName>>;
 }
 
 const Inputs = (props: InputProps) => {
-  const defaultCircumferenceUnits: LengthUnit = "in";
-  const defaultThicknessUnits: LengthUnit = "in";
-  const defaultTemperatureUnits: TemperatureUnit = "F";
-
-  const [circumference, setCircumference] = useState("");
-  const [circumferenceUnits, setCircumferenceUnits] = useState<LengthUnit>(
+  const {
+    circumference,
+    setCircumference,
+    circumferenceUnits,
+    setCircumferenceUnits,
     defaultCircumferenceUnits,
-  );
-  const [thickness, setThickness] = useState("");
-  const [thicknessUnits, setThicknessUnits] = useState<LengthUnit>(
+    thickness,
+    setThickness,
+    thicknessUnits,
+    setThicknessUnits,
     defaultThicknessUnits,
-  );
-  const [temperature, setTemperature] = useState("");
-  const [temperatureUnits, setTemperatureUnits] = useState<TemperatureUnit>(
+    temperature,
+    setTemperature,
+    temperatureUnits,
+    setTemperatureUnits,
     defaultTemperatureUnits,
-  );
-  const [pipeSchedule, setPipeSchedule] =
-    useState<PipeScheduleName>("stainless-steel");
+    pipeSchedule,
+    setPipeSchedule,
+  } = props;
 
   const inputSections = [
     {

@@ -1,12 +1,15 @@
 import { FileDownload } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
+import getScreenshot from "../../getScreenshot";
 
-interface EmailButtonProps {
-  saveCallback: () => Promise<Blob | null>;
+interface DownloadButtonProps {
+  screenshotContainer: HTMLDivElement | null;
+  screenshotting: boolean;
+  toggleScreenshotting: () => void;
 }
 
-const SaveButton = (props: EmailButtonProps) => {
+const DownloadButton = (props: DownloadButtonProps) => {
   const [loading, setLoading] = useState(false);
   return (
     <>
@@ -24,16 +27,23 @@ const SaveButton = (props: EmailButtonProps) => {
           textAlign: "center",
         }}
         onClick={async () => {
-          setLoading(true);
-          const b = await props.saveCallback();
-          if (b) {
-            const url = window.URL.createObjectURL(b);
-            const fakeLink = document.createElement("a");
-            fakeLink.href = url;
-            fakeLink.download = "Screenshot";
-            fakeLink.click();
+          if (props.screenshotContainer) {
+            setLoading(true);
+            const b = await getScreenshot(
+              props.screenshotContainer,
+              props.toggleScreenshotting,
+            );
+            if (b) {
+              const url = window.URL.createObjectURL(b);
+              const fakeLink = document.createElement("a");
+              fakeLink.href = url;
+              fakeLink.download = "Screenshot";
+              fakeLink.click();
+            }
+            setLoading(false);
           }
-          setLoading(false);
+
+          // Get the blob
         }}
         disabled={loading}
         fullWidth
@@ -51,4 +61,4 @@ const SaveButton = (props: EmailButtonProps) => {
   );
 };
 
-export default SaveButton;
+export default DownloadButton;

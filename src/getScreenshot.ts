@@ -1,6 +1,6 @@
 import html2canvas from "html2canvas";
 
-const download = async (
+const getScreenshot = async (
   container: HTMLDivElement,
   toggleScreenshotting: () => void,
 ) => {
@@ -9,6 +9,9 @@ const download = async (
     setTimeout(async () => {
       const result = await html2canvas(container);
       toggleScreenshotting();
+      setTimeout(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      }, 200);
       const outputStr = result.toDataURL();
       const blob = await (await fetch(outputStr)).blob();
       res(blob);
@@ -18,4 +21,4 @@ const download = async (
   return blob;
 };
 
-export default download;
+export default getScreenshot;

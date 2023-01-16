@@ -1,16 +1,21 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 interface IPAddressProps {
   isScreenshotting: boolean;
+  num1: string;
+  setNum1: Dispatch<SetStateAction<string>>;
+  num2: string;
+  setNum2: Dispatch<SetStateAction<string>>;
+  num3: string;
+  setNum3: Dispatch<SetStateAction<string>>;
+  num4: string;
+  setNum4: Dispatch<SetStateAction<string>>;
 }
 
 const IPAddress = (props: IPAddressProps) => {
   const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [num1, setNum1] = useState("");
-  const [num2, setNum2] = useState("");
-  const [num3, setNum3] = useState("");
-  const [num4, setNum4] = useState("");
+  const { num1, setNum1, num2, setNum2, num3, setNum3, num4, setNum4 } = props;
   const num1Ref = useRef<HTMLInputElement | null>(null);
   const num2Ref = useRef<HTMLInputElement | null>(null);
   const num3Ref = useRef<HTMLInputElement | null>(null);

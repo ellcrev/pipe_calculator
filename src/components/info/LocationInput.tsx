@@ -12,12 +12,19 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-const LocationInput = () => {
-  const [coords, setCoords] = useState<{ lat: string; long: string } | null>(
-    null,
-  );
+interface LocationInputProps {
+  location: {
+    lat: string;
+    long: string;
+  } | null;
+  setLocation: Dispatch<SetStateAction<{ lat: string; long: string } | null>>;
+}
+
+const LocationInput = (props: LocationInputProps) => {
+  const coords = props.location;
+  const setCoords = props.setLocation;
   const [loading, setLoading] = useState(false);
   const [geoError, setGeoError] = useState<string | null>(null);
 
@@ -61,7 +68,11 @@ const LocationInput = () => {
           mb: 2,
         }}
       >
-        <Typography variant="subtitle2" fontSize={"16px"}>
+        <Typography
+          variant="subtitle2"
+          fontSize={"16px"}
+          data-html2canvas-ignore={props.location !== null}
+        >
           Location Info
         </Typography>
         {coords ? (
@@ -152,7 +163,10 @@ const LocationInput = () => {
               />
             ) : null}
           </Button>
-          <Typography sx={{ mt: 1, color: "red", textAlign: "center" }}>
+          <Typography
+            sx={{ mt: 1, color: "red", textAlign: "center" }}
+            data-html2canvas-ignore
+          >
             {geoError}
           </Typography>
         </>

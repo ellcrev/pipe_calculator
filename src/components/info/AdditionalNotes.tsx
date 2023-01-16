@@ -1,17 +1,27 @@
 import { Box, Button, TextareaAutosize, Typography } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-const AdditionalNotes = () => {
+interface AdditionalNotes {
+  text: string;
+  setText: Dispatch<SetStateAction<string>>;
+}
+
+const AdditionalNotes = (props: AdditionalNotes) => {
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const [intialData, setInitialData] = useState(props.text);
+  const elem = useRef<HTMLDivElement | null>(null);
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="subtitle2" fontSize={"16px"} sx={{ mb: 2 }}>
         Additional Notes
       </Typography>
       <div
+        ref={elem}
         contentEditable
         suppressContentEditableWarning
-        onBeforeInput={() => {}}
+        onInput={() => {
+          if (elem.current) props.setText(elem.current.textContent ?? "");
+        }}
         style={{
           border: "1px solid black",
           fontSize: "16px",
