@@ -242,7 +242,7 @@ const Home: NextPage = () => {
                           },
                         );
                         const res = await (
-                          await fetch("/api/email", {
+                          await fetch(window.location.origin + "/api/email", {
                             method: "POST",
                             headers: {
                               "Content-Type": "application/json",
