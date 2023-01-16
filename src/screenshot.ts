@@ -23,10 +23,7 @@ const screenshot = async (container: HTMLDivElement) => {
   container.appendChild(childNode);
   const result = await html2canvas(container);
   container.removeChild(childNode);
-  const link = document.createElement("a");
-  link.download = "Screenshot";
-  link.href = result.toDataURL();
-  link.click();
+  return result.toDataURL();
 };
 
 export default screenshot;

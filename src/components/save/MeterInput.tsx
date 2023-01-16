@@ -80,6 +80,7 @@ const MeterInput = () => {
         </Typography>
         {/* Number 1 Input */}
         <TextField
+          inputMode={"numeric"}
           value={num1}
           onKeyDown={(ev) => {
             if (ev.key === "Backspace") {
@@ -110,6 +111,7 @@ const MeterInput = () => {
         />
         {/* Number 2 Input */}
         <TextField
+          inputMode={"numeric"}
           inputRef={num2Ref}
           variant="outlined"
           value={num2}
@@ -142,6 +144,7 @@ const MeterInput = () => {
         />
         {/* Number 3 Input */}
         <TextField
+          inputMode={"numeric"}
           inputRef={num3Ref}
           variant="outlined"
           value={num3}
@@ -174,6 +177,7 @@ const MeterInput = () => {
         />
         {/* Number 4 Input */}
         <TextField
+          inputMode={"numeric"}
           inputRef={num4Ref}
           value={num4}
           onKeyDown={(ev) => {

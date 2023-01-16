@@ -97,10 +97,15 @@ const Home: NextPage = () => {
           <SaveButton
             saveCallback={async () => {
               if (containerRef.current) {
-                await screenshot(containerRef.current);
+                const res = await screenshot(containerRef.current);
+                await new Promise((res) =>
+                  setTimeout(() => {
+                    res(true);
+                  }, 500),
+                );
+                return res;
               }
-
-              return true;
+              return "";
             }}
           />
         </Collapse>

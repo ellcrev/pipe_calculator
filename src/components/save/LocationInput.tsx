@@ -25,15 +25,6 @@ const LocationInput = () => {
     if (navigator.geolocation) {
       setGeoError(null);
       setLoading(true);
-      if (process.env.NODE_ENV === "development") {
-        setTimeout(() => {
-          setCoords({
-            lat: (41.40338).toString(),
-            long: (2.17403).toString(),
-          });
-          setLoading(false);
-        }, 3000);
-      }
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCoords({
@@ -43,7 +34,7 @@ const LocationInput = () => {
           setLoading(false);
         },
         (err) => {
-          if (err.PERMISSION_DENIED && process.env.NODE_ENV !== "development") {
+          if (err.PERMISSION_DENIED) {
             setGeoError("Location permission was denied by your browser.");
           } else if (err.POSITION_UNAVAILABLE) {
             setGeoError("Location permission could not be retrieved.");
@@ -133,9 +124,9 @@ const LocationInput = () => {
                     sx={{ borderRight: "1px solid black" }}
                     align="center"
                   >
-                    120001230
+                    {coords.lat}
                   </TableCell>
-                  <TableCell align="center">324234234</TableCell>
+                  <TableCell align="center">{coords.long}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
