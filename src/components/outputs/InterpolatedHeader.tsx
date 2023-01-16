@@ -153,7 +153,11 @@ const InterpolatedHeader = (props: InterpolatedHeaderProps) => {
                 }}
               >
                 Estimated Value{" "}
-                <Help fontSize="inherit" sx={{ ml: 0.5, color: "grey" }} />
+                <Help
+                  fontSize="inherit"
+                  sx={{ ml: 0.5, color: "grey" }}
+                  data-html2canvas-ignore
+                />
               </span>
             </Tooltip>
           </ClickAwayListener>

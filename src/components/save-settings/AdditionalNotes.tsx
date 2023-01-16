@@ -8,7 +8,6 @@ const AdditionalNotes = () => {
       <Typography variant="subtitle2" fontSize={"16px"} sx={{ mb: 2 }}>
         Additional Notes
       </Typography>
-
       <div
         contentEditable
         suppressContentEditableWarning

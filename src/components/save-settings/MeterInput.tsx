@@ -8,7 +8,11 @@ import {
 } from "@mui/material";
 import { useRef, useState } from "react";
 
-const MeterInput = () => {
+interface MeterInputProps {
+  isScreenshotting: boolean;
+}
+
+const MeterInput = (props: MeterInputProps) => {
   const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [letter, setLetter] = useState<"H" | "C" | "S">("H");
   const [num1, setNum1] = useState("");
@@ -101,7 +105,7 @@ const MeterInput = () => {
           inputRef={num1Ref}
           variant="outlined"
           sx={{ width: "50px", mx: 1 }}
-          placeholder={"1"}
+          placeholder={props.isScreenshotting ? "" : "1"}
           inputProps={{
             sx: { fontSize: "20px", py: 1, px: 0, fontWeight: "bold" },
             style: {
@@ -134,7 +138,7 @@ const MeterInput = () => {
             ev.preventDefault();
           }}
           sx={{ width: "50px", mx: 1 }}
-          placeholder={"5"}
+          placeholder={props.isScreenshotting ? "" : "5"}
           inputProps={{
             sx: { fontSize: "20px", py: 1, px: 0, fontWeight: "bold" },
             style: {
@@ -170,7 +174,7 @@ const MeterInput = () => {
             ev.preventDefault();
           }}
           sx={{ width: "50px", mx: 1 }}
-          placeholder={"3"}
+          placeholder={props.isScreenshotting ? "" : "3"}
           inputProps={{
             sx: { fontSize: "20px", py: 1, px: 0, fontWeight: "bold" },
             style: {
@@ -202,7 +206,7 @@ const MeterInput = () => {
           }}
           variant="outlined"
           sx={{ width: "50px" }}
-          placeholder={"8"}
+          placeholder={props.isScreenshotting ? "" : "8"}
           inputProps={{
             sx: { fontSize: "20px", py: 1, px: 0, fontWeight: "Bold" },
             style: {

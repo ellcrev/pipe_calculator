@@ -4,7 +4,11 @@ import IPAddress from "./IPAddress";
 import LocationInput from "./LocationInput";
 import MeterInput from "./MeterInput";
 
-const SaveSettings = () => {
+interface SaveSettingsProps {
+  isScreenshotting: boolean;
+}
+
+const SaveSettings = (props: SaveSettingsProps) => {
   return (
     <Box>
       <Divider
@@ -13,8 +17,8 @@ const SaveSettings = () => {
       >
         Save Report
       </Divider>
-      <MeterInput />
-      <IPAddress />
+      <MeterInput isScreenshotting={props.isScreenshotting} />
+      <IPAddress isScreenshotting={props.isScreenshotting} />
       <LocationInput />
       <AdditionalNotes />
     </Box>

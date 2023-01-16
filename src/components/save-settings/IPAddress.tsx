@@ -1,7 +1,11 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 
-const IPAddress = () => {
+interface IPAddressProps {
+  isScreenshotting: boolean;
+}
+
+const IPAddress = (props: IPAddressProps) => {
   const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [num1, setNum1] = useState("");
   const [num2, setNum2] = useState("");
@@ -152,7 +156,7 @@ const IPAddress = () => {
           }}
           inputRef={num1Ref}
           variant="outlined"
-          placeholder={"192"}
+          placeholder={props.isScreenshotting ? "" : "192"}
           inputProps={{
             sx: { fontSize: "16px", py: 1, px: 0, fontWeight: "bold" },
             style: {
@@ -201,7 +205,7 @@ const IPAddress = () => {
             }
             ev.preventDefault();
           }}
-          placeholder={"168"}
+          placeholder={props.isScreenshotting ? "" : "168"}
           inputProps={{
             sx: { fontSize: "16px", py: 1, px: 0, fontWeight: "bold" },
             style: {
@@ -250,7 +254,7 @@ const IPAddress = () => {
             }
             ev.preventDefault();
           }}
-          placeholder={"1"}
+          placeholder={props.isScreenshotting ? "" : "1"}
           inputProps={{
             sx: { fontSize: "16px", py: 1, px: 0, fontWeight: "bold" },
             style: {
@@ -298,7 +302,7 @@ const IPAddress = () => {
             ev.preventDefault();
           }}
           variant="outlined"
-          placeholder={"1"}
+          placeholder={props.isScreenshotting ? "" : "1"}
           inputProps={{
             sx: { fontSize: "16px", py: 1, px: 0, fontWeight: "Bold" },
             style: {
