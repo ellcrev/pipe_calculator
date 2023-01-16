@@ -1,19 +1,18 @@
-import {
-  Box,
-  CircularProgress,
-  Collapse,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Collapse, Paper, Typography } from "@mui/material";
 import { NextPage } from "next";
-import { useState } from "react";
-import { calculate, CalculationOutputs } from "../src/calculate";
-import Inputs from "../src/components/Input";
-import Output from "../src/components/Output";
+import { useRef, useState } from "react";
+import { calculate } from "../src/calculate";
+import Inputs from "../src/components/inputs/Index";
+import Output from "../src/components/outputs/Index";
+import SaveSettings from "../src/components/save/Index";
+import SaveButton from "../src/components/save/SaveButton";
+import screenshot from "../src/screenshot";
+import { CalculationOutputs } from "../src/types";
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState<CalculationOutputs | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   return (
     <Box
       sx={{
@@ -24,19 +23,22 @@ const Home: NextPage = () => {
       }}
     >
       <Paper
-        sx={(theme) => ({
-          px: 4,
+        ref={containerRef}
+        sx={{
+          px: 2,
+          py: 2,
           width: "100%",
+          border: "2px solid black",
           maxWidth: "600px",
           borderRadius: "0px",
           "@media only screen and (min-width: 600px)": {
             borderRadius: "8px",
             my: 4,
+            px: 8,
+            py: 4,
           },
-
-          py: 2,
-        })}
-        elevation={8}
+        }}
+        elevation={0}
       >
         <Typography
           variant="h4"
@@ -52,27 +54,30 @@ const Home: NextPage = () => {
             },
           }}
         >
-          Flexim Meter Calculator
+          Flexim Pipe Calculator
         </Typography>
         <Box>
           <Inputs
-            outputSet={output !== null}
-            onChange={() => {
+            clearOutput={() => {
               if (output) {
                 setOutput(null);
               }
             }}
             loading={loading}
-            onSubmit={async (inputData) => {
-              setOutput(null);
-              setLoading(true);
-              const outputData = calculate(inputData);
-              setTimeout(() => {
-                setLoading(false);
-                setOutput(outputData);
-              }, 1000);
-              return true;
-            }}
+            onSubmit={
+              !output
+                ? async (inputData) => {
+                    setOutput(null);
+                    setLoading(true);
+                    const outputData = calculate(inputData);
+                    setTimeout(() => {
+                      setLoading(false);
+                      setOutput(outputData);
+                    }, 1000);
+                    return true;
+                  }
+                : undefined
+            }
           />
           <Collapse in={output !== null}>
             <Box>
@@ -87,6 +92,18 @@ const Home: NextPage = () => {
             </Box>
           </Collapse>
         </Box>
+        <Collapse in={output !== null}>
+          <SaveSettings />
+          <SaveButton
+            saveCallback={async () => {
+              if (containerRef.current) {
+                await screenshot(containerRef.current);
+              }
+
+              return true;
+            }}
+          />
+        </Collapse>
       </Paper>
     </Box>
   );

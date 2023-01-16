@@ -6,8 +6,10 @@
  * Note: All temperatures are in Celsius & all speeds are in meters / second.
  */
 export default {
-  title: "Speed of Sound vs. Water Temp.",
-  labels: ["Temperature", "Speed of Sound"],
+  type: "speed" as const,
+  title: "Speed of Sound vs. Water Temperature",
+  labels: ["Temperature", "Speed of Sound"] as [string, string],
+  defaultUnits: ["C", "m/s"] as ["C", "m/s"],
   values: [
     {
       temperature: 0,

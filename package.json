@@ -16,6 +16,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@next/font": "latest",
+    "html2canvas": "^1.4.1",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
