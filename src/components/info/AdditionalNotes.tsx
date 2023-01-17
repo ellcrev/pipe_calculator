@@ -7,12 +7,15 @@ interface AdditionalNotes {
 }
 
 const AdditionalNotes = (props: AdditionalNotes) => {
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
-  const [intialData, setInitialData] = useState(props.text);
   const elem = useRef<HTMLDivElement | null>(null);
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="subtitle2" fontSize={"16px"} sx={{ mb: 2 }}>
+      <Typography
+        variant="h6"
+        fontSize={"20px"}
+        fontWeight={"bold"}
+        sx={{ mb: 2 }}
+      >
         Additional Notes
       </Typography>
       <div

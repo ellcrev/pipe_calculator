@@ -5,14 +5,6 @@ import IPAddress from "./IPAddress";
 import LocationInput from "./LocationInput";
 import MeterInput from "./MeterInput";
 
-// const [meter, setMeter] = useState<string>("");
-// const [ip, setIP] = useState<string>("");
-// const [location, setLocation] = useState<{
-//   lat: string;
-//   long: string;
-// } | null>(null);
-// const [additionalInfo, setAdditionalInfo] = useState<string>("");
-
 interface MeterInfoProps {
   isScreenshotting: boolean;
 

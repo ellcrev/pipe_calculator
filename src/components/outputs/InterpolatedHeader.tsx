@@ -1,11 +1,12 @@
 import { Help } from "@mui/icons-material";
 import { Box, ClickAwayListener, Tooltip, Typography } from "@mui/material";
-import { useState } from "react";
+
 import millimeters2Inches from "../../converters/mm2in";
 import metersPerSecond2feetPerSecond from "../../converters/mps2fps";
 import UnitSwitch from "./UnitSwitch";
 
 interface InterpolatedHeaderProps {
+  screenshotting: boolean;
   label: string;
   interpolatedValue: number; // Always metric
   nearestValue: number; // Always metric
@@ -14,7 +15,6 @@ interface InterpolatedHeaderProps {
 }
 
 const InterpolatedHeader = (props: InterpolatedHeaderProps) => {
-  const [openTooltip, setOpenTooltip] = useState(false);
   let estimatedVal = props.interpolatedValue;
   let nearestVal = props.nearestValue;
 
@@ -103,64 +103,51 @@ const InterpolatedHeader = (props: InterpolatedHeaderProps) => {
             justifyContent: "space-between",
           }}
         >
-          <ClickAwayListener
-            onClickAway={() => {
-              setOpenTooltip(false);
+          <Tooltip
+            enterTouchDelay={0}
+            arrow
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  p: 2,
+                  bgcolor: "#202528fa",
+                },
+              },
+              arrow: {
+                sx: {
+                  "&:before": {
+                    backgroundColor: "#202528fa",
+                    border: "none",
+                  },
+                },
+              },
             }}
+            title={
+              <Typography>
+                Estimates the {props.label.toLowerCase()} by interpolating the
+                nearest values from the{" "}
+                {props.label === "Speed of Sound"
+                  ? props.label
+                  : "Standard Pipe"}{" "}
+                table below.
+              </Typography>
+            }
           >
-            <Tooltip
-              open={openTooltip}
-              PopperProps={{
-                disablePortal: true,
+            <span
+              style={{
+                borderBottom: props.screenshotting
+                  ? "none"
+                  : "1px dotted #404040",
               }}
-              onClose={() => {
-                setOpenTooltip(false);
-              }}
-              arrow
-              disableFocusListener
-              disableHoverListener
-              componentsProps={{
-                tooltip: {
-                  sx: {
-                    p: 2,
-                    bgcolor: "#202528fa",
-                  },
-                },
-                arrow: {
-                  sx: {
-                    "&:before": {
-                      backgroundColor: "#202528fa",
-                      border: "none",
-                    },
-                  },
-                },
-              }}
-              title={
-                <Typography>
-                  Estimates the {props.label.toLowerCase()} by interpolating the
-                  nearest values from the{" "}
-                  {props.label === "Speed of Sound"
-                    ? props.label
-                    : "Standard Pipe"}{" "}
-                  table below.
-                </Typography>
-              }
             >
-              <span
-                style={{ borderBottom: "1px dotted #404040" }}
-                onClick={() => {
-                  setOpenTooltip((st) => !st);
-                }}
-              >
-                Estimated Value{" "}
-                <Help
-                  fontSize="inherit"
-                  sx={{ ml: 0.5, color: "grey" }}
-                  data-html2canvas-ignore
-                />
-              </span>
-            </Tooltip>
-          </ClickAwayListener>
+              Estimated Value{" "}
+              <Help
+                fontSize="inherit"
+                sx={{ ml: 0.5, color: "grey" }}
+                data-html2canvas-ignore
+              />
+            </span>
+          </Tooltip>
           <Typography
             sx={{
               textAlign: "center",

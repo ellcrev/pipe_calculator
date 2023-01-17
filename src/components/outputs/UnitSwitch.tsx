@@ -5,7 +5,6 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 
 export interface UnitSwitchProps {
   units: "SI" | "IMP";

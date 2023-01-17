@@ -61,3 +61,41 @@ export interface CalculationOutputs {
     temperature: TemperatureUnit;
   };
 }
+
+export interface AppData {
+  email: string;
+  info: {
+    time: string;
+    meter_number: string;
+    ip_address: string;
+    location: {
+      latitude: string;
+      longitude: string;
+    };
+    additional_notes: string;
+  };
+  inputs: {
+    circumference: string;
+    thickness: string;
+    temperature: string;
+    schedule: string;
+  };
+  outputs: {
+    nominal_size: string;
+    outer_diameter: {
+      nearest: string;
+      estimated: string;
+      difference: string;
+    };
+    wall_thickness: {
+      nearest: string;
+      estimated: string;
+      difference: string;
+    };
+    speed_of_sound: {
+      nearest: string;
+      estimated: string;
+      difference: string;
+    };
+  };
+}

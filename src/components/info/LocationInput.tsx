@@ -69,12 +69,14 @@ const LocationInput = (props: LocationInputProps) => {
         }}
       >
         <Typography
-          variant="subtitle2"
-          fontSize={"16px"}
-          data-html2canvas-ignore={props.location !== null}
+          variant="h6"
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          sx={{ mt: 2 }}
         >
-          Location Info
+          Location
         </Typography>
+
         {coords ? (
           <IconButton
             data-html2canvas-ignore

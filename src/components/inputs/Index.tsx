@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import {
   CalculationInputs,
@@ -19,6 +19,7 @@ import celsius2Fahrenheit from "../../converters/celsius2fahrenheit";
 import fahrenheit2Celsius from "../../converters/fahrenheit2celsius";
 
 interface InputProps {
+  screenshotting: boolean;
   loading: boolean;
   onSubmit?: (data: CalculationInputs) => Promise<true>;
   clearOutput: () => void;
@@ -47,7 +48,6 @@ const Inputs = (props: InputProps) => {
     setCircumference,
     circumferenceUnits,
     setCircumferenceUnits,
-    defaultCircumferenceUnits,
     thickness,
     setThickness,
     thicknessUnits,
@@ -178,30 +178,43 @@ const Inputs = (props: InputProps) => {
   const canCalculate = validateCalculate(inputData);
 
   return (
-    <Box sx={{ mb: 2 }}>
-      {inputSections.map((item) => {
-        if (item.type === "input") {
-          return <ControlledInput key={item.label} {...item} />;
-        } else if (item.type === "switch") {
-          return <ControlledSwitch key={item.label} {...item} />;
-        }
-      })}
-      {props.onSubmit ? (
-        <CalculateButton
-          onSubmit={
-            canCalculate
-              ? () => {
-                  if (props.onSubmit) {
-                    props.onSubmit(inputData);
-                  }
-                }
-              : undefined
-          }
-          loading={props.loading}
-          inputs={inputData}
-        ></CalculateButton>
+    <>
+      {props.screenshotting ? (
+        <Typography
+          variant="h6"
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          sx={{ mt: 2 }}
+        >
+          Inputs
+        </Typography>
       ) : null}
-    </Box>
+
+      <Box sx={{ mb: 2 }}>
+        {inputSections.map((item) => {
+          if (item.type === "input") {
+            return <ControlledInput key={item.label} {...item} />;
+          } else if (item.type === "switch") {
+            return <ControlledSwitch key={item.label} {...item} />;
+          }
+        })}
+        {props.onSubmit ? (
+          <CalculateButton
+            onSubmit={
+              canCalculate
+                ? () => {
+                    if (props.onSubmit) {
+                      props.onSubmit(inputData);
+                    }
+                  }
+                : undefined
+            }
+            loading={props.loading}
+            inputs={inputData}
+          ></CalculateButton>
+        ) : null}
+      </Box>
+    </>
   );
 };
 

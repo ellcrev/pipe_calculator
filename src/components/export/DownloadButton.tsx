@@ -4,6 +4,7 @@ import { useState } from "react";
 import getScreenshot from "../../getScreenshot";
 
 interface DownloadButtonProps {
+  meterNum: string;
   screenshotContainer: HTMLDivElement | null;
   screenshotting: boolean;
   toggleScreenshotting: () => void;
@@ -29,7 +30,7 @@ const DownloadButton = (props: DownloadButtonProps) => {
         onClick={async () => {
           if (props.screenshotContainer) {
             setLoading(true);
-            const b = await getScreenshot(
+            const { blob: b } = await getScreenshot(
               props.screenshotContainer,
               props.toggleScreenshotting,
             );
@@ -37,7 +38,10 @@ const DownloadButton = (props: DownloadButtonProps) => {
               const url = window.URL.createObjectURL(b);
               const fakeLink = document.createElement("a");
               fakeLink.href = url;
-              fakeLink.download = "Screenshot";
+              const d = new Date();
+              const formattedDate = d.getMonth() + 1 + "/" + d.getDate();
+              const subj = props.meterNum + " Meter Report | " + formattedDate;
+              fakeLink.download = subj + ".png";
               fakeLink.click();
             }
             setLoading(false);

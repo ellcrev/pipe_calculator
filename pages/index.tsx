@@ -12,8 +12,10 @@ import {
   PipeScheduleName,
   TemperatureUnit,
 } from "../src/types";
-import getCurrentTime from "../src/converters/timeFormat";
+import getCurrentTime from "../src/converters/getCurrentTime";
 import getScreenshot from "../src/getScreenshot";
+import getNearestEstimatedAndDifference from "../src/converters/getNearestEstimatedAndDifference";
+import tableLookup from "../src/tables/functions/tableLookup";
 
 const Home: NextPage = () => {
   // Process State Variables
@@ -23,7 +25,6 @@ const Home: NextPage = () => {
   const [emailMessage, setEmailMessage] = useState("");
 
   // Input data
-
   const defaultCircumferenceUnits: LengthUnit = "in";
   const defaultThicknessUnits: LengthUnit = "in";
   const defaultTemperatureUnits: TemperatureUnit = "F";
@@ -45,6 +46,9 @@ const Home: NextPage = () => {
 
   // Output data
   const [output, setOutput] = useState<CalculationOutputs | null>(null);
+  const [ODSystem, setODSystem] = useState<"SI" | "IMP">("IMP");
+  const [WTSystem, setWTSystem] = useState<"SI" | "IMP">("IMP");
+  const [speedSystem, setSpeedSystem] = useState<"SI" | "IMP">("IMP");
 
   // Info data
   const [meterLetter, setMeterLetter] = useState<"H" | "C" | "S">("H");
@@ -136,6 +140,7 @@ const Home: NextPage = () => {
                       setOutput(null);
                     }
                   }}
+                  screenshotting={screenshotting}
                   loading={calculating}
                   onSubmit={
                     !output
@@ -177,6 +182,13 @@ const Home: NextPage = () => {
                   <Box>
                     {output !== null ? (
                       <Output
+                        screenshotting={screenshotting}
+                        ODSystem={ODSystem}
+                        setODSystem={setODSystem}
+                        WTSystem={WTSystem}
+                        setWTSystem={setWTSystem}
+                        speedSystem={speedSystem}
+                        setSpeedSystem={setSpeedSystem}
                         {...output}
                         reset={() => {
                           setOutput(null);
@@ -225,6 +237,14 @@ const Home: NextPage = () => {
               return (
                 <Collapse in={output !== null} key={orderItem}>
                   <Export
+                    meterNum={
+                      meterLetter +
+                      "-" +
+                      meterNum1 +
+                      meterNum2 +
+                      meterNum3 +
+                      meterNum4
+                    }
                     screenshotContainer={containerRef.current}
                     screenshotting={screenshotting}
                     toggleScreenshotting={() => {
@@ -233,7 +253,7 @@ const Home: NextPage = () => {
                     email={email}
                     setEmail={setEmail}
                     callEmail={async () => {
-                      if (containerRef.current) {
+                      if (containerRef.current && output) {
                         setLoadingEmail(true);
                         const b = await getScreenshot(
                           containerRef.current,
@@ -247,7 +267,69 @@ const Home: NextPage = () => {
                             headers: {
                               "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({ message: "Whats good?" }),
+                            body: JSON.stringify({
+                              imageURL: b.outputStr,
+                              report: {
+                                email: email,
+                                info: {
+                                  time: getCurrentTime(),
+                                  meter_number:
+                                    meterLetter +
+                                    " - " +
+                                    meterNum1 +
+                                    meterNum2 +
+                                    meterNum3 +
+                                    meterNum4,
+                                  ip_address:
+                                    ip1 + "." + ip2 + "." + ip3 + "." + ip4,
+                                  location: {
+                                    latitude: location?.lat ?? "N/A",
+                                    longitude: location?.long ?? "N/A",
+                                  },
+                                  additional_notes: additionalInfo,
+                                },
+                                inputs: {
+                                  circumference:
+                                    circumference + " " + circumferenceUnits,
+                                  thickness: thickness + " " + thicknessUnits,
+                                  temperature:
+                                    temperature + " °" + temperatureUnits,
+                                  schedule: tableLookup(pipeSchedule).title,
+                                },
+                                outputs: {
+                                  nominal_size:
+                                    output.wallThickness.table.values[
+                                      output.wallThickness.nearestIndex
+                                    ].nominalSize + " in",
+                                  outer_diameter:
+                                    getNearestEstimatedAndDifference(
+                                      output.outerDiameterMillimeters,
+                                      output.wallThickness.table.values[
+                                        output.wallThickness.nearestIndex
+                                      ].outerDiameterInMM,
+                                      ODSystem === "IMP" ? "in" : "mm",
+                                    ),
+                                  wall_thickness:
+                                    getNearestEstimatedAndDifference(
+                                      output.wallThickness
+                                        .interpolatedValueMillimeters,
+                                      output.wallThickness.table.values[
+                                        output.wallThickness.nearestIndex
+                                      ].wallThicknessInMM,
+                                      WTSystem === "IMP" ? "in" : "mm",
+                                    ),
+                                  speed_of_sound:
+                                    getNearestEstimatedAndDifference(
+                                      output.soundSpeed
+                                        .interpolatedValueMetersPerSecond,
+                                      output.soundSpeed.table.values[
+                                        output.soundSpeed.nearestIndex
+                                      ].speedOfSoundInMetersPerSecond,
+                                      speedSystem === "IMP" ? "ft/s" : "m/s",
+                                    ),
+                                },
+                              },
+                            }),
                           })
                         ).json();
                         if (res.operation === "Success") {

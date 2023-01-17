@@ -50,8 +50,13 @@ const MeterInput = (props: MeterInputProps) => {
           justifyContent: "space-between",
         }}
       >
-        <Typography variant="subtitle2" fontSize={"16px"}>
-          Meter Number
+        <Typography
+          variant="h6"
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          sx={{ mt: 2 }}
+        >
+          Meter
         </Typography>
         {num1 || num2 || num3 || num4 ? (
           <Button
@@ -223,7 +228,7 @@ const MeterInput = (props: MeterInputProps) => {
             ev.preventDefault();
           }}
           variant="outlined"
-          sx={{ width: "50px" }}
+          sx={{ width: "50px", mx: 1 }}
           placeholder={props.isScreenshotting ? "" : "8"}
           inputProps={{
             sx: { fontSize: "20px", py: 1, px: 0, fontWeight: "Bold" },

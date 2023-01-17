@@ -4,6 +4,7 @@ import DownloadButton from "./DownloadButton";
 import Email from "./Email";
 
 export interface ExportProps {
+  meterNum: string;
   screenshotContainer: HTMLDivElement | null;
   screenshotting: boolean;
   toggleScreenshotting: () => void;
@@ -23,9 +24,10 @@ const Export = (props: ExportProps) => {
       >
         Export Settings
       </Divider>
-      <Email {...props} />
-      <Divider> or </Divider>
       <DownloadButton {...props} />
+      <Divider> OR </Divider>
+
+      <Email {...props} />
     </Box>
   );
 };

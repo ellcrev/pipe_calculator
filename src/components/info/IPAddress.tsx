@@ -99,7 +99,12 @@ const IPAddress = (props: IPAddressProps) => {
           justifyContent: "space-between",
         }}
       >
-        <Typography variant="subtitle2" fontSize={"16px"}>
+        <Typography
+          variant="h6"
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          sx={{ mt: 2 }}
+        >
           IP Address
         </Typography>
         {num1 || num2 || num3 || num4 ? (
