@@ -167,7 +167,7 @@ const buildEmailTemplate = (inp: AppData) => {
           </tr>
           <tr>
             <td class="label difference">Difference</td>
-            <td class="difference">${inp.outputs.wall_thickness.difference}}</td>
+            <td class="difference">${inp.outputs.wall_thickness.difference}</td>
           </tr>
           <!---->
           <tr>
