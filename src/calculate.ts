@@ -157,10 +157,27 @@ export const calculate = (inputData: CalculationInputs): CalculationOutputs => {
   /**
    * Part 3: Linearly interpolate the speed of sound.
    */
-  const interpolatedSpeedOfSound =
-    (speedTable.values[nearestTemperatureIndex].speedOfSoundInMetersPerSecond *
-      inputData.temperature) /
-    speedTable.values[nearestTemperatureIndex].temperatureInCelsius;
+  const linearlyInterpolate = (temp: number) => {
+    // Step 1: Find the closest index to the given temperature
+    const closestIndex = nearestTemperatureIndex;
+    if(temp < speedTable.values[0].temperature) {
+      // give prediction for temp below the smallest temperature
+      return speedTable.values[0].speed_of_sound * temp / speedTable.values[0].temperature;
+    }
+    else if(temp > speedTable.values[speedTable.values.length - 1].temperature) {
+      // give prediction for temp above the greatest temperature
+      return speedTable.values[speedTable.values.length - 1].speed_of_sound * temp / speedTable.values[speedTable.values.length - 1].temperature;
+    }
+    else if(speedTable.values[closestIndex + 1]){
+      // Step 2: Linearly interpolate the the speed of sound from the given input temperature.
+      const interpolated = (speedTable.values[closestIndex + 1].speed_of_sound - speedTable.values[closestIndex].speed_of_sound) * (temp - speedTable.values[closestIndex].temperature) / (speedTable.values[closestIndex + 1].temperature - speedTable.values[closestIndex].temperature) + speedTable.values[closestIndex].speed_of_sound;
+      return interpolated;
+    }
+    else{
+      return speedTable.values[closestIndex].speed_of_sound;
+    }
+  }
+  const interpolatedSpeedOfSound = linearlyInterpolate(inputData.temperature);
 
   // ======================= STEP 5 (Return Output) ======================
   return {
